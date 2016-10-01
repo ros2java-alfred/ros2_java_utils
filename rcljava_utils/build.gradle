@@ -1,0 +1,17 @@
+plugins {
+    id "org.ros2.rcljava" version "0.2.0"
+}
+
+apply plugin: 'org.ros2.rcljava'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+     jcenter()
+}
+
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
