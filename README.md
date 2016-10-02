@@ -4,12 +4,12 @@ rostopic_java
 ```
 rostopic_java is a command-line tool for printing information about ROS2 Topics.
 Commands:
-    rostopic echo   print messages to screen
-    rostopic find   find topics by type
-    rostopic hz     display publishing rate of topic
-    rostopic list   list active topics
-    rostopic pub    publish data to topic
-    rostopic type   print topic type
+    rostopic_java echo   print messages to screen
+    rostopic_java find   find topics by type
+    rostopic_java hz     display publishing rate of topic
+    rostopic_java list   list active topics
+    rostopic_java pub    publish data to topic
+    rostopic_java type   print topic type
 Type rostopic_java <command> -h for more detailed usage, e.g. 'rostopic echo -h'
 ```
 

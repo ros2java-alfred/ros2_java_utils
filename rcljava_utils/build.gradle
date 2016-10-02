@@ -7,11 +7,11 @@ apply plugin: 'org.ros2.rcljava'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+ament {generateEclipse=true}
+
 repositories {
      jcenter()
 }
-
-ament {generateEclipse=true}
 
 dependencies {
     compile 'com.google.code.gson:gson:2.7'
