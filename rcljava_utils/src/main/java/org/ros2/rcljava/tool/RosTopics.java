@@ -1,3 +1,17 @@
+/* Copyright 2016 Open Source Robotics Foundation, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ros2.rcljava.tool;
 
 import java.util.HashMap;
@@ -13,7 +27,10 @@ import org.ros2.rcljava.node.topic.Subscription;
 
 import com.google.gson.Gson;
 
-
+/**
+ * Topic tool CLI
+ * @author Mickael Gaillard <mick.gaillard@gmail.com>
+ */
 public class RosTopics {
 
     private static String NAME = RosTopics.class.getSimpleName();
@@ -30,18 +47,18 @@ public class RosTopics {
     private final static String CMD_DELAY   = "delay";
 
     private static void fullUsage() {
-        System.out.println("rostopic is a command-line tool for printing information about ROS Topics.\n" +
+        System.out.println("rostopic_java is a command-line tool for printing information about ROS Topics.\n" +
         "Commands:\n" +
-//        "\trostopic bw\tdisplay bandwidth used by topic\n" +
-//        "\trostopic delay\tdisplay delay of topic from timestamp in header\n" +
-        "\trostopic echo\tprint messages to screen\n" +
-        "\trostopic find\tfind topics by type\n" +
-//        "\trostopic hz\tdisplay publishing rate of topic    \n" +
-//        "\trostopic info\tprint information about active topic\n" +
-        "\trostopic list\tlist active topics\n" +
-        "\trostopic pub\tpublish data to topic\n" +
-        "\trostopic type\tprint topic type\n" +
-        "Type rostopic <command> -h for more detailed usage, e.g. 'rostopic echo -h'\n");
+//        "\trostopic_java bw\tdisplay bandwidth used by topic\n" +
+//        "\trostopic_java delay\tdisplay delay of topic from timestamp in header\n" +
+        "\trostopic_java echo\tprint messages to screen\n" +
+        "\trostopic_java find\tfind topics by type\n" +
+//        "\trostopic_java hz\tdisplay publishing rate of topic    \n" +
+//        "\trostopic_java info\tprint information about active topic\n" +
+        "\trostopic_java list\tlist active topics\n" +
+        "\trostopic_java pub\tpublish data to topic\n" +
+        "\trostopic_java type\tprint topic type\n" +
+        "Type rostopic_java <command> -h for more detailed usage, e.g. 'rostopic echo -h'\n");
         System.exit(1);
     }
 
@@ -109,11 +126,22 @@ public class RosTopics {
         if (args.length == 3) {
             System.out.println("message must be specified");
         } else {
-
+            int i = 0;
             final Gson gson = new Gson();
             String topic = args[1];
             String messageTypeName = args[2];
             String messageJson = args[3];
+            int rate = 1;
+
+            // Parse Rate
+            if (args.length == 5) {
+                String rateArg = args[4];
+                rate = Integer.parseInt(rateArg);
+
+                if (rate == 0) {
+                    rate = 1;
+                }
+            }
 
             Class<Message> messageType = RosTopics.loadMessage(messageTypeName);
             Message message = gson.fromJson(messageJson, messageType);
@@ -125,11 +153,25 @@ public class RosTopics {
                         QoSProfile.PROFILE_DEFAULT);
 
             while(RCLJava.ok()) {
+                // Hack for counter in message
+                if (messageJson.contains("iii")) {
+                    String messageJsonCp = new String(messageJson);
+                    messageJsonCp = messageJsonCp.replaceAll("iii", String.valueOf(++i));
+                    message = gson.fromJson(messageJsonCp, messageType);
+                }
+
+                // Publish
                 System.out.println("Publishing: " + gson.toJson(message));
                 pub.publish(message);
 
+                // Only once publish
+                if (rate == -1) {
+                    break;
+                }
+
+                // Rate Sleep
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(1000/rate);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
