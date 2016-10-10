@@ -53,7 +53,7 @@ public class RosTopics {
 //        "\trostopic_java delay\tdisplay delay of topic from timestamp in header\n" +
         "\trostopic_java echo\tprint messages to screen\n" +
         "\trostopic_java find\tfind topics by type\n" +
-//        "\trostopic_java hz\tdisplay publishing rate of topic    \n" +
+        "\trostopic_java hz\tdisplay publishing rate of topic    \n" +
 //        "\trostopic_java info\tprint information about active topic\n" +
         "\trostopic_java list\tlist active topics\n" +
         "\trostopic_java pub\tpublish data to topic\n" +
@@ -63,8 +63,7 @@ public class RosTopics {
     }
 
     private static void rostopicCmdHz(String[] args) {
-        //TODO not implemented.
-        System.out.println("Not implemented...");
+        RosTopics.rostopicCmdEchoOrRate(args, true);
     }
 
     private static void rostopicCmdType(String[] args) {
@@ -215,6 +214,10 @@ public class RosTopics {
     }
 
     private static void rostopicCmdEcho(String[] args) {
+        RosTopics.rostopicCmdEchoOrRate(args, false);
+    }
+
+    private static void rostopicCmdEchoOrRate(String[] args,final boolean rate) {
         Node node = RCLJava.createNode(NAME);
 
         if (args.length == 1) {
@@ -233,9 +236,23 @@ public class RosTopics {
                     messageType,
                     topic,
                     new Consumer<Message>() {
+                        long startTime = System.nanoTime();
+                        long lastTime = System.nanoTime();
+
                         @Override
                         public void accept(Message msg) {
-                            System.out.println(gson.toJson(msg));
+                            double estimatedTime = 1000000000.0 / (float)(System.nanoTime() - lastTime);
+                            if (rate) {
+                                long udapte = (System.nanoTime() - startTime) / 1000000000;
+                                if (udapte > 1 ) {
+                                    System.out.println(String.format("Freq : %f hz", estimatedTime));
+                                    startTime = System.nanoTime();
+                                }
+                            } else {
+                                System.out.println(gson.toJson(msg));
+                            }
+
+                            lastTime = System.nanoTime();
                         }
                     },
                     QoSProfile.PROFILE_DEFAULT);
