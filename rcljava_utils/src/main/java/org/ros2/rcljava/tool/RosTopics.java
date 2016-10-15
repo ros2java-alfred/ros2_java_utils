@@ -229,7 +229,10 @@ public class RosTopics {
             String topic = args[1];
             String messageTypeName = args[2];
 
-            final Class<Message> messageType = RosTopics.loadMessage(messageTypeName);
+            Class<Message> messageType = RosTopics.loadMessage(messageTypeName);
+            if (messageType == null) {
+                messageType = RosServices.loadInternalMessage(messageTypeName);
+            }
             final Gson gson = new Gson();
 
             Subscription<Message> sub = node.<Message>createSubscription(
@@ -241,18 +244,21 @@ public class RosTopics {
 
                         @Override
                         public void accept(Message msg) {
-                            double estimatedTime = 1000000000.0 / (float)(System.nanoTime() - lastTime);
                             if (rate) {
-                                long udapte = (System.nanoTime() - startTime) / 1000000000;
-                                if (udapte > 1 ) {
+
+                                long update = (System.nanoTime() - startTime) / 1000000000;
+                                if (update > 1 ) {
+
+                                    double estimatedTime = 1000000000.0 / (float)(System.nanoTime() - lastTime);
                                     System.out.println(String.format("Freq : %f hz", estimatedTime));
+
                                     startTime = System.nanoTime();
                                 }
+
+                                lastTime = System.nanoTime();
                             } else {
                                 System.out.println(gson.toJson(msg));
                             }
-
-                            lastTime = System.nanoTime();
                         }
                     },
                     QoSProfile.PROFILE_DEFAULT);
@@ -266,7 +272,7 @@ public class RosTopics {
     }
 
     @SuppressWarnings("unchecked")
-    private static Class<Message> loadMessage(String messageTypeName) {
+    public static Class<Message> loadMessage(String messageTypeName) {
         Class<Message> messageType = null;
 
         try {

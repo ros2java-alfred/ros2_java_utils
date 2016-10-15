@@ -16,9 +16,15 @@ package org.ros2.rcljava.tool;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.Future;
 
 import org.ros2.rcljava.RCLJava;
+import org.ros2.rcljava.internal.message.Message;
+import org.ros2.rcljava.internal.service.Service;
 import org.ros2.rcljava.node.Node;
+import org.ros2.rcljava.node.service.Client;
+
+import com.google.gson.Gson;
 
 /**
  * Service tool CLI
@@ -28,23 +34,19 @@ public class RosServices {
     private static String NAME = RosServices.class.getSimpleName();
 //  private static Logger logger = Logger.getLogger(RCLJava.LOG_NAME);
 
-    private final static String CMD_ECHO    = "echo";
     private final static String CMD_TYPE    = "type";
     private final static String CMD_LIST    = "list";
     private final static String CMD_INFO    = "info";
-    private final static String CMD_PUB     = "pub";
-    private final static String CMD_BW      = "bw";
+    private final static String CMD_REQ     = "req";
     private final static String CMD_FIND    = "find";
 
     private static void fullUsage() {
         System.out.println("rosservice_java is a command-line tool for printing information about ROS Services.\n" +
         "Commands:\n" +
-//        "\trosservice_java bw\tdisplay bandwidth used by topic\n" +
-        "\trosservice_java echo\tprint messages to screen\n" +
         "\trosservice_java find\tfind service by type\n" +
 //        "\trosservice_java info\tprint information about active topic\n" +
         "\trosservice_java list\tlist active services\n" +
-        "\trosservice_java pub\trequest data to service\n" +
+        "\trosservice_java req\trequest data to service\n" +
         "\trosservice_java type\tprint service type\n" +
         "Type rosservice_java <command> -h for more detailed usage, e.g. 'rosservice_java echo -h'\n");
         System.exit(1);
@@ -59,27 +61,94 @@ public class RosServices {
             String nametype = args[1];
             HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
 
-            if (topicsTypes.containsValue(nametype)) {
+//            if (topicsTypes.containsValue(nametype)) {
                 for (Entry<String, String> entity : topicsTypes.entrySet()) {
-                    if (entity.getValue().equals(nametype)) {
-                        System.out.println(String.format("%s", entity.getKey()));
+                    if (RosServices.messageConverteur(entity.getValue()).equals(nametype)) {
+                        System.out.println(String.format("%s", entity.getKey().replace("Reply", "")));
                     }
                 }
-            }
+//            }
         }
 
         node.dispose();
 
     }
 
-    private static void rostopicCmdBw(String[] args) {
-        // TODO Auto-generated method stub
+    private static String messageConverteur(String internalMessage) {
+        String displayMessage = internalMessage
+                .replace("::srv::dds_", "")
+                .replace("_Response_", "")
+//                .replace("_Request_", "")
+                .replace("::", "/");
 
+        return displayMessage;
     }
 
     private static void rostopicCmdPub(String[] args) {
-        // TODO Auto-generated method stub
+        Node node = RCLJava.createNode(NAME);
 
+        if (args.length == 1) {
+            System.out.println("/topic must be specified");
+        }
+        else if (args.length == 2) {
+            System.out.println("topic type must be specified");
+        } else {
+            String topic = args[1];
+            String serviceTypeName = args[2];
+            String serviceJson = args[3];
+
+            final Class<Service> messageType = RosServices.loadServiceMessage(serviceTypeName);
+            final Gson gson = new Gson();
+            System.out.println(messageType);
+
+            try {
+                Client<Service> client = node.<Service>createClient(messageType, topic);
+
+                // Set request.
+                Service msg = messageType.newInstance();
+                Message request = gson.fromJson(serviceJson, msg.getRequestType());
+
+                // Call service...
+                Future<Message> future = client.sendRequest(request);
+                RCLJava.spinOnce(node);
+                if (future != null) {
+                    Message responce =  future.get();
+                    System.out.println(String.format("Result : %s", gson.toJson(responce)));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        node.dispose();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<Service> loadServiceMessage(String serviceTypeName) {
+        Class<Service> serviceType = null;
+
+        try {
+            serviceType = (Class<Service>) Class.forName(serviceTypeName.replaceFirst("/", ".srv."));
+        } catch (ClassNotFoundException e1) {
+            System.out.println("Service not found !");
+            e1.printStackTrace();
+        }
+
+        return serviceType;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<Message> loadInternalMessage(String serviceTypeName) {
+        Class<Message> serviceType = null;
+
+        try {
+            serviceType = (Class<Message>) Class.forName(serviceTypeName.replaceFirst("/", ".srv."));
+        } catch (ClassNotFoundException e1) {
+            System.out.println("Message not found !");
+            e1.printStackTrace();
+        }
+
+        return serviceType;
     }
 
     private static void rostopicCmdInfo(String[] args) {
@@ -102,7 +171,6 @@ public class RosServices {
         }
 
         node.dispose();
-
     }
 
     private static void rostopicCmdType(String[] args) {
@@ -122,7 +190,7 @@ public class RosServices {
                 topicPath += "Reply";
                 if (topicsTypes.containsKey(topicPath)) {
                         String type = topicsTypes.get(topicPath);
-                        System.out.println(String.format("%s", type.replace("::srv::dds_", "").replace("_Response_", "").replace("::", "/")));
+                        System.out.println(String.format("%s", RosServices.messageConverteur(type)));
                 } else {
                     System.out.println("No Service " + topicPath + " available !");
                 }
@@ -132,11 +200,6 @@ public class RosServices {
         }
 
         node.dispose();
-    }
-
-    private static void rostopicCmdEcho(String[] args) {
-        // TODO Auto-generated method stub
-
     }
 
 
@@ -157,9 +220,6 @@ public class RosServices {
 
       try {
           switch (args[0]) {
-          case CMD_ECHO:
-              RosServices.rostopicCmdEcho(args);
-              break;
           case CMD_TYPE:
               RosServices.rostopicCmdType(args);
               break;
@@ -169,11 +229,8 @@ public class RosServices {
           case CMD_INFO:
               RosServices.rostopicCmdInfo(args);
               break;
-          case CMD_PUB:
+          case CMD_REQ:
               RosServices.rostopicCmdPub(args);
-              break;
-          case CMD_BW:
-              RosServices.rostopicCmdBw(args);
               break;
           case CMD_FIND:
               RosServices.rostopicCmdFind(args);
