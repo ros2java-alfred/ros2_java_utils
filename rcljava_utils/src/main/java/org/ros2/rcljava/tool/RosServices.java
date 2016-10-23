@@ -31,7 +31,7 @@ import com.google.gson.Gson;
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
 public class RosServices {
-    private static String NAME = RosServices.class.getSimpleName();
+    private static String NAME = RosServices.class.getSimpleName().toLowerCase();
 //  private static Logger logger = Logger.getLogger(RCLJava.LOG_NAME);
 
     private final static String CMD_TYPE    = "type";
@@ -60,6 +60,7 @@ public class RosServices {
         } else {
             String nametype = args[1];
             HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            RCLJava.spinOnce(node);
 
 //            if (topicsTypes.containsValue(nametype)) {
                 for (Entry<String, String> entity : topicsTypes.entrySet()) {
@@ -159,6 +160,7 @@ public class RosServices {
     private static void rostopicCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
         HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+        RCLJava.spinOnce(node);
 
         if (topicsTypes.size() > 0) {
             for (Entry<String, String> entity : topicsTypes.entrySet()) {
@@ -185,6 +187,7 @@ public class RosServices {
 
             String topicPath = args[1];
             HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            RCLJava.spinOnce(node);
 
             if (topicsTypes.size() > 0) {
                 topicPath += "Reply";

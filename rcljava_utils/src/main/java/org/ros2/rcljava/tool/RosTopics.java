@@ -33,7 +33,7 @@ import com.google.gson.Gson;
  */
 public class RosTopics {
 
-    private static String NAME = RosTopics.class.getSimpleName();
+    private static String NAME = RosTopics.class.getSimpleName().toLowerCase();
 //    private static Logger logger = Logger.getLogger(RCLJava.LOG_NAME);
 
     private final static String CMD_ECHO    = "echo";
@@ -78,6 +78,9 @@ public class RosTopics {
 
             String topicPath = args[1];
             HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            RCLJava.spinOnce(node);
+
+            topicsTypes.putAll(node.getTopicNamesAndTypes());
 
             if (topicsTypes.size() > 0) {
                 if (topicsTypes.containsKey(topicPath)) {
@@ -96,10 +99,15 @@ public class RosTopics {
     private static void rostopicCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
         HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+        RCLJava.spinOnce(node);
+
+        topicsTypes.putAll(node.getTopicNamesAndTypes());
 
         if (topicsTypes.size() > 0) {
             for (Entry<String, String> entity : topicsTypes.entrySet()) {
-                System.out.println(String.format("%s", entity.getKey()));
+                if (!entity.getKey().endsWith("Reply") && !entity.getKey().endsWith("Request")) {
+                    System.out.println(String.format("%s", entity.getKey()));
+                }
             }
         }else {
             System.out.println("Empty topics !");
@@ -195,6 +203,7 @@ public class RosTopics {
         } else {
             String nametype = args[1];
             HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            RCLJava.spinOnce(node);
 
             if (topicsTypes.containsValue(nametype)) {
                 for (Entry<String, String> entity : topicsTypes.entrySet()) {
