@@ -17,7 +17,7 @@ package org.ros2.rcljava.tool;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.ros2.rcljava.QoSProfile;
+import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.RCLJava;
 import org.ros2.rcljava.internal.message.Message;
 import org.ros2.rcljava.node.Node;
@@ -157,7 +157,7 @@ public class RosTopics {
                     node.<Message>createPublisher(
                         messageType,
                         topic,
-                        QoSProfile.PROFILE_DEFAULT);
+                        QoSProfile.DEFAULT);
 
             while(RCLJava.ok()) {
                 // Hack for counter in message
@@ -270,7 +270,7 @@ public class RosTopics {
                             }
                         }
                     },
-                    QoSProfile.PROFILE_DEFAULT);
+                    QoSProfile.DEFAULT);
 
             RCLJava.spin(node);
 

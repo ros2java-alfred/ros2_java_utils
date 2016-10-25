@@ -3,7 +3,7 @@ package org.ros2.rcljava.tool;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ros2.rcljava.QoSProfile;
+import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.RCLJava;
 import org.ros2.rcljava.node.Node;
 import org.ros2.rcljava.node.parameter.ParameterVariant;
@@ -37,7 +37,7 @@ public class RosParam {
         String param = args[1];
 
         try {
-            SyncParametersClient parameters_client = new SyncParametersClient(node, remotenode, QoSProfile.PROFILE_PARAMETER);
+            SyncParametersClient parameters_client = new SyncParametersClient(node, remotenode, QoSProfile.PARAMETER);
 
             // Get a few of the parameters just set.
             List<ParameterVariant<?>> parameters = parameters_client.getParameters(Arrays.asList(param));
