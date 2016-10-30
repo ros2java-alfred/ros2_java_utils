@@ -1,7 +1,7 @@
 package org.ros2.rcljava.tool;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.RCLJava;
@@ -9,9 +9,9 @@ import org.ros2.rcljava.node.Node;
 import org.ros2.rcljava.node.parameter.ParameterVariant;
 import org.ros2.rcljava.node.parameter.SyncParametersClient;
 
-public class RosParam {
+public class Ros2Param {
 
-    private static String NAME = RosParam.class.getSimpleName().toLowerCase();
+    private static String NAME = Ros2Param.class.getSimpleName().toLowerCase();
 
     private static final String HELP =
             "USAGE:\n"+
@@ -40,7 +40,9 @@ public class RosParam {
             SyncParametersClient parameters_client = new SyncParametersClient(node, remotenode, QoSProfile.PARAMETER);
 
             // Get a few of the parameters just set.
-            List<ParameterVariant<?>> parameters = parameters_client.getParameters(Arrays.asList(param));
+            ConcurrentSkipListSet<ParameterVariant<?>> parameters =
+                    new ConcurrentSkipListSet<ParameterVariant<?>>(parameters_client.getParameters(Arrays.asList(param)));
+
             if (parameters.size() > 0) {
                 for (ParameterVariant<?> parameter : parameters) {
                     System.out.println(parameter.valueToString());

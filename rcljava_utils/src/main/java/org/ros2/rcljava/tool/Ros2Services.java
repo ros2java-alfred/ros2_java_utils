@@ -14,8 +14,8 @@
  */
 package org.ros2.rcljava.tool;
 
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.Future;
 
 import org.ros2.rcljava.RCLJava;
@@ -30,9 +30,8 @@ import com.google.gson.Gson;
  * Service tool CLI
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
-public class RosServices {
-    private static String NAME = RosServices.class.getSimpleName().toLowerCase();
-//  private static Logger logger = Logger.getLogger(RCLJava.LOG_NAME);
+public class Ros2Services {
+    private static String NAME = Ros2Services.class.getSimpleName().toLowerCase();
 
     private final static String CMD_TYPE    = "type";
     private final static String CMD_LIST    = "list";
@@ -59,12 +58,12 @@ public class RosServices {
             System.out.println("service type must be specified");
         } else {
             String nametype = args[1];
-            HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
 
 //            if (topicsTypes.containsValue(nametype)) {
                 for (Entry<String, String> entity : topicsTypes.entrySet()) {
-                    if (RosServices.messageConverteur(entity.getValue()).equals(nametype)) {
+                    if (Ros2Services.messageConverteur(entity.getValue()).equals(nametype)) {
                         System.out.println(String.format("%s", entity.getKey().replace("Reply", "")));
                     }
                 }
@@ -98,7 +97,7 @@ public class RosServices {
             String serviceTypeName = args[2];
             String serviceJson = args[3];
 
-            final Class<Service> messageType = RosServices.loadServiceMessage(serviceTypeName);
+            final Class<Service> messageType = Ros2Services.loadServiceMessage(serviceTypeName);
             final Gson gson = new Gson();
             System.out.println(messageType);
 
@@ -159,7 +158,7 @@ public class RosServices {
 
     private static void rostopicCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
-        HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+        ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
         RCLJava.spinOnce(node);
 
         if (topicsTypes.size() > 0) {
@@ -186,14 +185,14 @@ public class RosServices {
         } else {
 
             String topicPath = args[1];
-            HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
 
             if (topicsTypes.size() > 0) {
                 topicPath += "Reply";
                 if (topicsTypes.containsKey(topicPath)) {
                         String type = topicsTypes.get(topicPath);
-                        System.out.println(String.format("%s", RosServices.messageConverteur(type)));
+                        System.out.println(String.format("%s", Ros2Services.messageConverteur(type)));
                 } else {
                     System.out.println("No Service " + topicPath + " available !");
                 }
@@ -208,11 +207,6 @@ public class RosServices {
 
 
     public static void main(String[] args) throws InterruptedException {
-//      logger.setLevel(Level.ALL);
-//      ConsoleHandler handler = new ConsoleHandler();
-//      handler.setFormatter(new SimpleFormatter());
-//      logger.addHandler(handler);
-//      handler.setLevel(Level.ALL);
 
       if (args.length == 0) {
           fullUsage();
@@ -224,22 +218,22 @@ public class RosServices {
       try {
           switch (args[0]) {
           case CMD_TYPE:
-              RosServices.rostopicCmdType(args);
+              Ros2Services.rostopicCmdType(args);
               break;
           case CMD_LIST:
-              RosServices.rostopicCmdList(args);
+              Ros2Services.rostopicCmdList(args);
               break;
           case CMD_INFO:
-              RosServices.rostopicCmdInfo(args);
+              Ros2Services.rostopicCmdInfo(args);
               break;
           case CMD_REQ:
-              RosServices.rostopicCmdPub(args);
+              Ros2Services.rostopicCmdPub(args);
               break;
           case CMD_FIND:
-              RosServices.rostopicCmdFind(args);
+              Ros2Services.rostopicCmdFind(args);
               break;
           default:
-              RosServices.fullUsage();
+              Ros2Services.fullUsage();
               break;
           }
       } catch (Exception e) {

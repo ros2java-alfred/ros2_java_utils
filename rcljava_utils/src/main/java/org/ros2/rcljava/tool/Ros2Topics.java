@@ -14,8 +14,8 @@
  */
 package org.ros2.rcljava.tool;
 
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.RCLJava;
@@ -31,10 +31,9 @@ import com.google.gson.Gson;
  * Topic tool CLI
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
-public class RosTopics {
+public class Ros2Topics {
 
-    private static String NAME = RosTopics.class.getSimpleName().toLowerCase();
-//    private static Logger logger = Logger.getLogger(RCLJava.LOG_NAME);
+    private static String NAME = Ros2Topics.class.getSimpleName().toLowerCase();
 
     private final static String CMD_ECHO    = "echo";
     private final static String CMD_HZ      = "hz";
@@ -63,7 +62,7 @@ public class RosTopics {
     }
 
     private static void rostopicCmdHz(String[] args) {
-        RosTopics.rostopicCmdEchoOrRate(args, true);
+        Ros2Topics.rostopicCmdEchoOrRate(args, true);
     }
 
     private static void rostopicCmdType(String[] args) {
@@ -77,7 +76,7 @@ public class RosTopics {
         } else {
 
             String topicPath = args[1];
-            HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            ConcurrentSkipListMap<String, String > topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
 
             topicsTypes.putAll(node.getTopicNamesAndTypes());
@@ -98,7 +97,7 @@ public class RosTopics {
 
     private static void rostopicCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
-        HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+        ConcurrentSkipListMap<String, String > topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
         RCLJava.spinOnce(node);
 
         topicsTypes.putAll(node.getTopicNamesAndTypes());
@@ -150,7 +149,7 @@ public class RosTopics {
                 }
             }
 
-            Class<Message> messageType = RosTopics.loadMessage(messageTypeName);
+            Class<Message> messageType = Ros2Topics.loadMessage(messageTypeName);
             Message message = gson.fromJson(messageJson, messageType);
 
             Publisher<Message> pub =
@@ -202,7 +201,7 @@ public class RosTopics {
             System.out.println("topic type must be specified");
         } else {
             String nametype = args[1];
-            HashMap<String, String > topicsTypes = node.getTopicNamesAndTypes();
+            ConcurrentSkipListMap<String, String > topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
 
             if (topicsTypes.containsValue(nametype)) {
@@ -223,7 +222,7 @@ public class RosTopics {
     }
 
     private static void rostopicCmdEcho(String[] args) {
-        RosTopics.rostopicCmdEchoOrRate(args, false);
+        Ros2Topics.rostopicCmdEchoOrRate(args, false);
     }
 
     private static void rostopicCmdEchoOrRate(String[] args,final boolean rate) {
@@ -238,9 +237,9 @@ public class RosTopics {
             String topic = args[1];
             String messageTypeName = args[2];
 
-            Class<Message> messageType = RosTopics.loadMessage(messageTypeName);
+            Class<Message> messageType = Ros2Topics.loadMessage(messageTypeName);
             if (messageType == null) {
-                messageType = RosServices.loadInternalMessage(messageTypeName);
+                messageType = Ros2Services.loadInternalMessage(messageTypeName);
             }
             final Gson gson = new Gson();
 
@@ -295,11 +294,6 @@ public class RosTopics {
     }
 
     public static void main(String[] args) throws InterruptedException {
-//        logger.setLevel(Level.ALL);
-//        ConsoleHandler handler = new ConsoleHandler();
-//        handler.setFormatter(new SimpleFormatter());
-//        logger.addHandler(handler);
-//        handler.setLevel(Level.ALL);
 
         if (args.length == 0) {
             fullUsage();
@@ -311,34 +305,34 @@ public class RosTopics {
         try {
             switch (args[0]) {
             case CMD_ECHO:
-                RosTopics.rostopicCmdEcho(args);
+                Ros2Topics.rostopicCmdEcho(args);
                 break;
             case CMD_HZ:
-                RosTopics.rostopicCmdHz(args);
+                Ros2Topics.rostopicCmdHz(args);
                 break;
             case CMD_TYPE:
-                RosTopics.rostopicCmdType(args);
+                Ros2Topics.rostopicCmdType(args);
                 break;
             case CMD_LIST:
-                RosTopics.rostopicCmdList(args);
+                Ros2Topics.rostopicCmdList(args);
                 break;
             case CMD_INFO:
-                RosTopics.rostopicCmdInfo(args);
+                Ros2Topics.rostopicCmdInfo(args);
                 break;
             case CMD_PUB:
-                RosTopics.rostopicCmdPub(args);
+                Ros2Topics.rostopicCmdPub(args);
                 break;
             case CMD_BW:
-                RosTopics.rostopicCmdBw(args);
+                Ros2Topics.rostopicCmdBw(args);
                 break;
             case CMD_FIND:
-                RosTopics.rostopicCmdFind(args);
+                Ros2Topics.rostopicCmdFind(args);
                 break;
             case CMD_DELAY:
-                RosTopics.rostopicCmdDelay(args);
+                Ros2Topics.rostopicCmdDelay(args);
                 break;
             default:
-                RosTopics.fullUsage();
+                Ros2Topics.fullUsage();
                 break;
             }
         } catch (Exception e) {
