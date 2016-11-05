@@ -97,7 +97,7 @@ public class Ros2Topics {
 
     private static void rostopicCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
-        ConcurrentSkipListMap<String, String > topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
+        ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
         RCLJava.spinOnce(node);
 
         topicsTypes.putAll(node.getTopicNamesAndTypes());
