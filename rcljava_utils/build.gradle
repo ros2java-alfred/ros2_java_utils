@@ -1,13 +1,11 @@
 plugins {
-    id "org.ros2.rcljava" version "0.2.0"
+    id "org.ros2.rcljava" version "0.3.3"
 }
 
 apply plugin: 'org.ros2.rcljava'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-
-ament {generateEclipse=true}
 
 repositories {
      jcenter()
@@ -19,12 +17,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-task copyTask(type: Copy) {
-    from configurations.testRuntime
-    into([project.getProperty('ament.install_space'), 'lib', 'java'].join(File.separator))
-    from configurations.runtime
-    into([project.getProperty('ament.install_space'), 'lib', 'java'].join(File.separator))
-    from "lib"
-    into([project.getProperty('ament.install_space'), 'lib', 'java'].join(File.separator))
+
+
+ament {
+    generateEclipse = true
 }
-assemble.dependsOn copyTask
