@@ -1,4 +1,4 @@
-# rcljava_utils
+# rcljava_utils [![Build Status](https://travis-ci.org/ros2java-alfred/ros2_java_utils.svg?branch=master)](https://travis-ci.org/ros2java-alfred/ros2_java_utils)
 
 rostopic_java
 ```
