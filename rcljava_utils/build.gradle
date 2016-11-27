@@ -1,5 +1,5 @@
 plugins {
-    id "org.ros2.rcljava" version "0.4.4"
+    id "org.ros2.rcljava" version "0.4.6"
 }
 
 apply plugin: 'org.ros2.rcljava'
@@ -17,8 +17,21 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-
-
 ament {
     generateEclipse = true
+
+    scripts {
+        ros2nodes_java {
+            mainClassName = 'org.ros2.rcljava.tool.Ros2Nodes'
+        }
+        ros2param_java {
+            mainClassName = 'org.ros2.rcljava.tool.Ros2Param'
+        }
+        ros2services_java {
+            mainClassName = 'org.ros2.rcljava.tool.Ros2Services'
+        }
+        ros2topics_java {
+            mainClassName = 'org.ros2.rcljava.tool.Ros2Topics'
+        }
+    }
 }
