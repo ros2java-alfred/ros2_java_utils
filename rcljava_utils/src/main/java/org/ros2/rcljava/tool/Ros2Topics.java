@@ -21,7 +21,7 @@ import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.RCLJava;
 import org.ros2.rcljava.internal.message.Message;
 import org.ros2.rcljava.node.Node;
-import org.ros2.rcljava.node.topic.Consumer;
+import org.ros2.rcljava.node.topic.SubscriptionCallback;
 import org.ros2.rcljava.node.topic.Publisher;
 import org.ros2.rcljava.node.topic.Subscription;
 
@@ -246,12 +246,12 @@ public class Ros2Topics {
             Subscription<Message> sub = node.<Message>createSubscription(
                     messageType,
                     topic,
-                    new Consumer<Message>() {
+                    new SubscriptionCallback<Message>() {
                         long startTime = System.nanoTime();
                         long lastTime = System.nanoTime();
 
                         @Override
-                        public void accept(Message msg) {
+                        public void dispatch(Message msg) {
                             if (rate) {
 
                                 long update = (System.nanoTime() - startTime) / 1000000000;
