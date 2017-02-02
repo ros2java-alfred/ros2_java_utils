@@ -17,30 +17,33 @@ package org.ros2.rcljava.tool;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.ros2.rcljava.RCLJava;
+import org.ros2.rcljava.node.Node;
 
 /**
  * Node tool CLI
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
 public class Ros2Nodes {
+    private static String NAME = Ros2Nodes.class.getSimpleName().toLowerCase();
+
 
     public static void main(String[] args) throws InterruptedException {
 
         // Initialize RCL
         RCLJava.rclJavaInit();
-
-        System.out.println("List of Nodes :");
-
-        ConcurrentSkipListSet<String> nodeNames = new ConcurrentSkipListSet<String>(RCLJava.getNodeNames());
+        Node node = RCLJava.createNode(NAME);
+        ConcurrentSkipListSet<String> nodeNames = new ConcurrentSkipListSet<String>(node.getNodeNames());
+        RCLJava.spinOnce(node);
 
         if (nodeNames.size() > 0) {
             for (String entity : nodeNames) {
-                    System.out.println(String.format("\t|>%s", entity));
+                System.out.println(String.format("%s", entity));
             }
         }else {
             System.out.println("Empty topics !");
         }
 
+        node.dispose();
         RCLJava.shutdown();
     }
 }
