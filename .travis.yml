@@ -26,7 +26,7 @@ before_install:
 - rm -rf $ROS2WS/src/ros2_java/ros2_java_utils && ln -s $HOME_BUILD/ros2java-alfred/ros2_java_utils $ROS2WS/src/ros2_java/ros2_java_utils
 - echo "BUILD ROS2 WS..."
 - cd $HOME_BUILD && ls -lFa ./ && find . -maxdepth 3 -type d -not \( -path "./.git" -prune \)
-- docker run -u "$UID" -it --rm -v `pwd`:`pwd` -w `pwd` theosakamg7/ros2java:latest sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament build --symlink-install --isolated --skip-packages $PKG_EXCLUDE"
+- docker run -u "$UID" -it --rm -v `pwd`:`pwd` -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN -w `pwd` theosakamg7/ros2java:latest sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament build --symlink-install --isolated --skip-packages $PKG_EXCLUDE"
 
 script:
 - cd $HOME_BUILD && docker run -u "$UID" -it --rm -v `pwd`:`pwd` -w `pwd` theosakamg7/ros2java:latest sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament test --isolated --only rcljava_utils"
