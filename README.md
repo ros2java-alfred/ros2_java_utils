@@ -1,4 +1,4 @@
-# rcljava_utils [![Build Status](https://travis-ci.org/ros2java-alfred/ros2_java_utils.svg?branch=master)](https://travis-ci.org/ros2java-alfred/ros2_java_utils) [![Coverage Status](https://coveralls.io/repos/github/ros2java-alfred/ros2_java_utils/badge.svg?branch=master)](https://coveralls.io/github/ros2java-alfred/ros2_java_utils?branch=master)
+# rcljava_utils [![Build Status](https://travis-ci.org/ros2java-alfred/ros2_java_utils.svg?branch=master)](https://travis-ci.org/ros2java-alfred/ros2_java_utils) [![Coverage Status](https://coveralls.io/repos/github/ros2java-alfred/ros2_java_utils/badge.svg?branch=master)](https://coveralls.io/github/ros2java-alfred/ros2_java_utils?branch=master) [![Code Climate](https://codeclimate.com/github/ros2java-alfred/ros2_java_utils/badges/gpa.svg)](https://codeclimate.com/github/ros2java-alfred/ros2_java_utils)
 
 rostopic_java
 ```
