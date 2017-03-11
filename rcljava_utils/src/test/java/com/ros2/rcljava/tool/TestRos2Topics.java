@@ -2,36 +2,21 @@ package com.ros2.rcljava.tool;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
 import org.ros2.rcljava.tool.Ros2Topics;
 
 public class TestRos2Topics {
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
+    @Test
+    public final void testEmpty() throws InterruptedException {
+        Ros2Topics.main(new String[]{});
+        assertEquals(true, true);
     }
 
     @Test
-    @Ignore
-    public final void testFullUsage() throws InterruptedException {
-        Ros2Topics.main(new String[]{});
+    public final void testBadCommand() throws InterruptedException {
+        Ros2Topics.main(new String[]{"foo"});
         assertEquals(true, true);
     }
 
@@ -44,6 +29,7 @@ public class TestRos2Topics {
     @Test
     public final void testFind() throws InterruptedException {
         Ros2Topics.main(new String[]{"find"});
+        Ros2Topics.main(new String[]{"find", "std_msgs/String"});
         assertEquals(true, true);
     }
 
@@ -62,12 +48,34 @@ public class TestRos2Topics {
     @Test
     public final void testPub() throws InterruptedException {
         Ros2Topics.main(new String[]{"pub"});
+        Ros2Topics.main(new String[]{"pub", "/rosout"});
+        Ros2Topics.main(new String[]{"pub", "/rosout", "std_msgs/String"});
+        Ros2Topics.main(new String[]{"pub", "/rosout", "std_msgs/String", "iii", "-1"});
         assertEquals(true, true);
     }
 
     @Test
     public final void testType() throws InterruptedException {
         Ros2Topics.main(new String[]{"type"});
+        Ros2Topics.main(new String[]{"type", "/rosout"});
+        assertEquals(true, true);
+    }
+
+    @Test
+    public final void testInfo() throws InterruptedException {
+        Ros2Topics.main(new String[]{"info"});
+        assertEquals(true, true);
+    }
+
+    @Test
+    public final void testBw() throws InterruptedException {
+        Ros2Topics.main(new String[]{"bw"});
+        assertEquals(true, true);
+    }
+
+    @Test
+    public final void testDelay() throws InterruptedException {
+        Ros2Topics.main(new String[]{"delay"});
         assertEquals(true, true);
     }
 
