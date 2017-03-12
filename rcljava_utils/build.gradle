@@ -42,7 +42,7 @@ ament {
 
 test {
     finalizedBy 'jacocoTestReport'
-    dependsOn 'cleanTest'
+#    dependsOn 'cleanTest'
 }
 
 tasks.withType(Test) {
