@@ -40,7 +40,10 @@ ament {
 }
 
 
-test { finalizedBy jacocoTestReport }
+test {
+    finalizedBy 'jacocoTestReport'
+    dependsOn 'cleanTest'
+}
 
 tasks.withType(Test) {
     testLogging {

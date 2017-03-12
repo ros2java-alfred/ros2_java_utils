@@ -10,6 +10,12 @@ env:
     - HOME_BUILD=$HOME/build
     - ROS2WS=$HOME_BUILD/ros2_java_ws
 
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
+  - $HOME/.gradle
+
 before_install:
 - docker pull theosakamg7/ros2java:latest
 - echo "INSTALL/BUILD ROS2 AMENT..."
@@ -29,7 +35,7 @@ before_install:
 - docker run -u "$UID" -it --rm -v `pwd`:`pwd` -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN -w `pwd` theosakamg7/ros2java:latest sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament build --symlink-install --isolated --skip-packages $PKG_EXCLUDE"
 
 script:
-- cd $HOME_BUILD && docker run -u "$UID" -it --rm -v `pwd`:`pwd` -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN -w `pwd` theosakamg7/ros2java:latest sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament test --skip-build --skip-install --isolated --only-packages rcljava_utils --ament-gradle-args --parallel --daemon --configure-on-demand --rerun-tasks"
+- cd $HOME_BUILD && docker run -u "$UID" -it --rm -v `pwd`:`pwd` -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN -w `pwd` theosakamg7/ros2java:latest sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament test --skip-build --skip-install --isolated --only-packages rcljava_utils --ament-gradle-args --parallel --daemon --configure-on-demand"
 
 notifications:
   webhooks:
