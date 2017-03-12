@@ -2,11 +2,16 @@ package com.ros2.rcljava.tool;
 
 import static org.junit.Assert.*;
 
+import org.junit.Rule;
 import org.junit.Test;
-
+import org.junit.rules.Timeout;
 import org.ros2.rcljava.tool.Ros2Topics;
 
 public class TestRos2Topics {
+
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
+
 
     @Test
     public final void testEmpty() throws InterruptedException {
@@ -23,6 +28,8 @@ public class TestRos2Topics {
     @Test
     public final void testEcho() throws InterruptedException {
         Ros2Topics.main(new String[]{"echo"});
+        Ros2Topics.main(new String[]{"echo", "/rosout"});
+        Ros2Topics.main(new String[]{"echo", "/rosout", "std_msgs/String", "2"});
         assertEquals(true, true);
     }
 
@@ -50,7 +57,7 @@ public class TestRos2Topics {
         Ros2Topics.main(new String[]{"pub"});
         Ros2Topics.main(new String[]{"pub", "/rosout"});
         Ros2Topics.main(new String[]{"pub", "/rosout", "std_msgs/String"});
-        Ros2Topics.main(new String[]{"pub", "/rosout", "std_msgs/String", "iii", "-1"});
+        Ros2Topics.main(new String[]{"pub", "/rosout", "std_msgs/String", "{ \"data\":\"iii\" }", "-1"});
         assertEquals(true, true);
     }
 

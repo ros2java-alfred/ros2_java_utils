@@ -30,7 +30,7 @@ import com.google.gson.Gson;
  * Service tool CLI
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
-public class Ros2Services {
+public abstract class Ros2Services {
     private static String NAME = Ros2Services.class.getSimpleName().toLowerCase();
 
     private final static String CMD_TYPE    = "type";

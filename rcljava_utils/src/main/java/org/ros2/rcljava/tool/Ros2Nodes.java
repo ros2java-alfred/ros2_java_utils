@@ -23,7 +23,7 @@ import org.ros2.rcljava.node.Node;
  * Node tool CLI
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
-public class Ros2Nodes {
+public abstract class Ros2Nodes {
     private static String NAME = Ros2Nodes.class.getSimpleName().toLowerCase();
 
 

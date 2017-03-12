@@ -23,7 +23,7 @@ import org.ros2.rcljava.node.Node;
 import org.ros2.rcljava.node.parameter.ParameterVariant;
 import org.ros2.rcljava.node.parameter.SyncParametersClient;
 
-public class Ros2Param {
+public abstract class Ros2Param {
 
     private static String NAME = Ros2Param.class.getSimpleName().toLowerCase();
 

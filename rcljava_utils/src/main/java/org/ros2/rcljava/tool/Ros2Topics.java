@@ -31,7 +31,7 @@ import com.google.gson.Gson;
  * Topic tool CLI
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
-public class Ros2Topics {
+public abstract class Ros2Topics {
 
     private static String NAME = Ros2Topics.class.getSimpleName().toLowerCase();
 
@@ -58,7 +58,6 @@ public class Ros2Topics {
         "\trostopic_java pub\tpublish data to topic\n" +
         "\trostopic_java type\tprint topic type\n" +
         "Type rostopic_java <command> -h for more detailed usage, e.g. 'rostopic echo -h'\n");
-        System.exit(1);
     }
 
     private static void rostopicCmdHz(String[] args) {
@@ -236,6 +235,12 @@ public class Ros2Topics {
         } else {
             String topic = args[1];
             String messageTypeName = args[2];
+            int i = 0;
+            int max = Integer.MAX_VALUE;
+
+            if (args.length == 4) {
+                max = Integer.parseInt(args[3]);
+            }
 
             Class<Message> messageType = Ros2Topics.loadMessage(messageTypeName);
             if (messageType == null) {
@@ -271,7 +276,10 @@ public class Ros2Topics {
                     },
                     QoSProfile.DEFAULT);
 
-            RCLJava.spin(node);
+            while(i < max) {
+                RCLJava.spinOnce(node);
+                i++;
+            }
 
             sub.dispose();
             }
@@ -297,49 +305,50 @@ public class Ros2Topics {
 
         if (args.length == 0) {
             fullUsage();
-        }
+        } else {
 
-        // Initialize RCL
-        RCLJava.rclJavaInit();
+            // Initialize RCL
+            RCLJava.rclJavaInit();
 
-        try {
-            switch (args[0]) {
-            case CMD_ECHO:
-                Ros2Topics.rostopicCmdEcho(args);
-                break;
-            case CMD_HZ:
-                Ros2Topics.rostopicCmdHz(args);
-                break;
-            case CMD_TYPE:
-                Ros2Topics.rostopicCmdType(args);
-                break;
-            case CMD_LIST:
-                Ros2Topics.rostopicCmdList(args);
-                break;
-            case CMD_INFO:
-                Ros2Topics.rostopicCmdInfo(args);
-                break;
-            case CMD_PUB:
-                Ros2Topics.rostopicCmdPub(args);
-                break;
-            case CMD_BW:
-                Ros2Topics.rostopicCmdBw(args);
-                break;
-            case CMD_FIND:
-                Ros2Topics.rostopicCmdFind(args);
-                break;
-            case CMD_DELAY:
-                Ros2Topics.rostopicCmdDelay(args);
-                break;
-            default:
-                Ros2Topics.fullUsage();
-                break;
+            try {
+                switch (args[0]) {
+                case CMD_ECHO:
+                    Ros2Topics.rostopicCmdEcho(args);
+                    break;
+                case CMD_HZ:
+                    Ros2Topics.rostopicCmdHz(args);
+                    break;
+                case CMD_TYPE:
+                    Ros2Topics.rostopicCmdType(args);
+                    break;
+                case CMD_LIST:
+                    Ros2Topics.rostopicCmdList(args);
+                    break;
+                case CMD_INFO:
+                    Ros2Topics.rostopicCmdInfo(args);
+                    break;
+                case CMD_PUB:
+                    Ros2Topics.rostopicCmdPub(args);
+                    break;
+                case CMD_BW:
+                    Ros2Topics.rostopicCmdBw(args);
+                    break;
+                case CMD_FIND:
+                    Ros2Topics.rostopicCmdFind(args);
+                    break;
+                case CMD_DELAY:
+                    Ros2Topics.rostopicCmdDelay(args);
+                    break;
+                default:
+                    Ros2Topics.fullUsage();
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("ERROR : " + e.getMessage());
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            System.out.println("ERROR : " + e.getMessage());
-            e.printStackTrace();
-        }
 
-        RCLJava.shutdown();
+            RCLJava.shutdown();
+        }
     }
 }
