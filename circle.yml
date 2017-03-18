@@ -2,8 +2,8 @@ machine:
   services:
     - docker
   environment:
-    - HOME_BUILD: $HOME/build
-    - ROS2WS: $HOME_BUILD/ros2_java_ws
+    HOME_BUILD: ${HOME}/build
+    ROS2WS: ${HOME_BUILD}/ros2_java_ws
 
 dependencies:
   cache_directories:
