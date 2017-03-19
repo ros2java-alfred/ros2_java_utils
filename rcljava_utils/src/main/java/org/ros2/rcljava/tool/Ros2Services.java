@@ -47,7 +47,7 @@ public abstract class Ros2Services {
         "\tros2service_java list\tlist active services\n" +
         "\tros2service_java req\trequest data to service\n" +
         "\tros2service_java type\tprint service type\n" +
-        "Type rosservice_java <command> -h for more detailed usage, e.g. 'ros2service_java echo -h'\n");
+        "Type rosservice_java <command> -h for more detailed usage, e.g. 'ros2service_java find -h'\n");
         System.exit(1);
     }
 
