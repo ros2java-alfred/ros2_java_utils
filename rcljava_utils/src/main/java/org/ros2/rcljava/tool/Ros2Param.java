@@ -29,9 +29,9 @@ public abstract class Ros2Param {
 
     private static final String HELP =
             "USAGE:\n"+
-            "  rosparam_java get <node/variable>\n"+
-            "  rosparam_java set <node/variable> <value>\n" +
-            "  rosparam_java list <node>";
+            "  ros2param_java get <node/variable>\n"+
+            "  ros2param_java set <node/variable> <value>\n" +
+            "  ros2param_java list <node>";
 
     enum Usage {
         PARAM_NONE,

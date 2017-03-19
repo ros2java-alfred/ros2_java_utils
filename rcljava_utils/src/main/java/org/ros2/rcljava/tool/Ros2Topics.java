@@ -46,18 +46,18 @@ public abstract class Ros2Topics {
     private final static String CMD_DELAY   = "delay";
 
     private static void fullUsage() {
-        System.out.println("rostopic_java is a command-line tool for printing information about ROS Topics.\n" +
+        System.out.println("ros2topic_java is a command-line tool for printing information about ROS Topics.\n" +
         "Commands:\n" +
-//        "\trostopic_java bw\tdisplay bandwidth used by topic\n" +
-//        "\trostopic_java delay\tdisplay delay of topic from timestamp in header\n" +
-        "\trostopic_java echo\tprint messages to screen\n" +
-        "\trostopic_java find\tfind topics by type\n" +
-        "\trostopic_java hz\tdisplay publishing rate of topic    \n" +
-//        "\trostopic_java info\tprint information about active topic\n" +
-        "\trostopic_java list\tlist active topics\n" +
-        "\trostopic_java pub\tpublish data to topic\n" +
-        "\trostopic_java type\tprint topic type\n" +
-        "Type rostopic_java <command> -h for more detailed usage, e.g. 'rostopic echo -h'\n");
+//        "\tros2topic_java bw\tdisplay bandwidth used by topic\n" +
+//        "\tros2topic_java delay\tdisplay delay of topic from timestamp in header\n" +
+        "\tros2topic_java echo\tprint messages to screen\n" +
+        "\tros2topic_java find\tfind topics by type\n" +
+        "\tros2topic_java hz\tdisplay publishing rate of topic    \n" +
+//        "\tros2topic_java info\tprint information about active topic\n" +
+        "\tros2topic_java list\tlist active topics\n" +
+        "\tros2topic_java pub\tpublish data to topic\n" +
+        "\tros2topic_java type\tprint topic type\n" +
+        "Type ros2topic_java <command> -h for more detailed usage, e.g. 'ros2topic echo -h'\n");
     }
 
     private static void rostopicCmdHz(String[] args) {

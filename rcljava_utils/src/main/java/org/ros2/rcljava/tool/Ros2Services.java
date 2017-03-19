@@ -40,14 +40,14 @@ public abstract class Ros2Services {
     private final static String CMD_FIND    = "find";
 
     private static void fullUsage() {
-        System.out.println("rosservice_java is a command-line tool for printing information about ROS Services.\n" +
+        System.out.println("ros2service_java is a command-line tool for printing information about ROS Services.\n" +
         "Commands:\n" +
-        "\trosservice_java find\tfind service by type\n" +
-//        "\trosservice_java info\tprint information about active topic\n" +
-        "\trosservice_java list\tlist active services\n" +
-        "\trosservice_java req\trequest data to service\n" +
-        "\trosservice_java type\tprint service type\n" +
-        "Type rosservice_java <command> -h for more detailed usage, e.g. 'rosservice_java echo -h'\n");
+        "\tros2service_java find\tfind service by type\n" +
+//        "\tros2service_java info\tprint information about active topic\n" +
+        "\tros2service_java list\tlist active services\n" +
+        "\tros2service_java req\trequest data to service\n" +
+        "\tros2service_java type\tprint service type\n" +
+        "Type rosservice_java <command> -h for more detailed usage, e.g. 'ros2service_java echo -h'\n");
         System.exit(1);
     }
 
