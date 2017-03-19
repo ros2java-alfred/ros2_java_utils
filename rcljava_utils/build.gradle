@@ -1,11 +1,8 @@
 plugins {
-    id "org.ros2.rcljava" version "0.4.6"
-    id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.8.1'
+    id "org.ros2.rcljava" version "0.4.7"
 }
 
 apply plugin: 'org.ros2.rcljava'
-apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -37,46 +34,4 @@ ament {
             mainClassName = 'org.ros2.rcljava.tool.Ros2Topics'
         }
     }
-}
-
-
-test {
-    finalizedBy 'jacocoTestReport'
-//    dependsOn 'cleanTest'
-}
-
-tasks.withType(Test) {
-    testLogging {
-        // set options for log level LIFECYCLE
-        events "passed", "skipped", "failed", "standardOut"
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
-
-        // set options for log level DEBUG and INFO
-        debug {
-            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
-            exceptionFormat "full"
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
-    }
-    finalizedBy 'coveralls'
 }

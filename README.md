@@ -30,6 +30,8 @@ Type ros2topic_java <command> -h for more detailed usage, e.g. 'ros2topic echo -
 ### Publish data to topic
 `ros2topic_java pub /topic msgs/Message '{message}'`
 
+Note : auto-increment counter if 'iii' is used.
+
 ## ros2services_java
 
 ## ros2param_java
