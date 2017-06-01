@@ -31,7 +31,7 @@ import com.google.gson.Gson;
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
 public abstract class Ros2Services {
-    private static String NAME = Ros2Services.class.getSimpleName().toLowerCase();
+    private static String NAME = "_" + Ros2Services.class.getSimpleName().toLowerCase();
 
     private final static String CMD_TYPE    = "type";
     private final static String CMD_LIST    = "list";

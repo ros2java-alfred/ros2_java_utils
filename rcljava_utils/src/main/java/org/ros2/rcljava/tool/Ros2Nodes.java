@@ -24,7 +24,7 @@ import org.ros2.rcljava.node.Node;
  * @author Mickael Gaillard <mick.gaillard@gmail.com>
  */
 public abstract class Ros2Nodes {
-    private static String NAME = Ros2Nodes.class.getSimpleName().toLowerCase();
+    private static String NAME = "_" + Ros2Nodes.class.getSimpleName().toLowerCase();
 
 
     public static void main(String[] args) throws InterruptedException {

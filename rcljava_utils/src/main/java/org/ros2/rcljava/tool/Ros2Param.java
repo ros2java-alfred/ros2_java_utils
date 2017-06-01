@@ -25,7 +25,7 @@ import org.ros2.rcljava.node.parameter.SyncParametersClient;
 
 public abstract class Ros2Param {
 
-    private static String NAME = Ros2Param.class.getSimpleName().toLowerCase();
+    private static String NAME = "_" + Ros2Param.class.getSimpleName().toLowerCase();
 
     private static final String HELP =
             "USAGE:\n"+

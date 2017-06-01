@@ -33,7 +33,7 @@ import com.google.gson.Gson;
  */
 public abstract class Ros2Topics {
 
-    private static String NAME = Ros2Topics.class.getSimpleName().toLowerCase();
+    private static String NAME = "_" + Ros2Topics.class.getSimpleName().toLowerCase();
 
     private final static String CMD_ECHO    = "echo";
     private final static String CMD_HZ      = "hz";
