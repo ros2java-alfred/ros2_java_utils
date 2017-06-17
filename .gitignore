@@ -1,6 +1,7 @@
 build
 bin
 .gradle
+log4j.properties
 
 # Eclipse
 .classpath

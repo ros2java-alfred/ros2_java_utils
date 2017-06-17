@@ -2,7 +2,6 @@ package com.ros2.rcljava.tool;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -11,17 +10,15 @@ import org.ros2.rcljava.tool.Ros2Services;
 public class TestRos2Services {
 
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
+    public Timeout globalTimeout = Timeout.seconds(3); // 10 seconds max per method tested
 
     @Test
-    @Ignore
     public final void testEmpty() throws InterruptedException {
         Ros2Services.main(new String[]{});
         assertEquals(true, true);
     }
 
     @Test
-    @Ignore
     public final void testBadCommand() throws InterruptedException {
         Ros2Services.main(new String[]{"foo"});
         assertEquals(true, true);
@@ -55,7 +52,6 @@ public class TestRos2Services {
     }
 
     @Test
-    @Ignore
     public final void testReq() throws InterruptedException {
         Ros2Services.main(new String[]{"req"});
         Ros2Services.main(new String[]{"req", "/ros2services/_list_parameters"});
