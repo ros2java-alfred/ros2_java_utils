@@ -28,6 +28,7 @@ public class TestRos2Param {
     }
 
     @Test
+    @Ignore
     public final void testTest() throws InterruptedException {
         Ros2Param.main(new String[]{"\ros2param", "~value"});
         assertEquals(true, true);
