@@ -18,4 +18,10 @@ public class TestRos2Nodes {
         assertEquals(true, true);
     }
 
+    @Test
+    public final void testNodesEmpty() throws InterruptedException {
+        Ros2Nodes.main(new String[]{});
+        assertEquals(true, true);
+    }
+
 }

@@ -14,6 +14,7 @@
  */
 package org.ros2.rcljava.tool;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.Future;
@@ -51,20 +52,22 @@ public abstract class Ros2Services {
         System.exit(1);
     }
 
-    private static void rostopicCmdFind(String[] args) {
+    private static void rosserviceCmdFind(String[] args) {
         Node node = RCLJava.createNode(NAME);
 
         if (args.length == 1) {
             System.out.println("service type must be specified");
         } else {
             String nametype = args[1];
-            ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
+            ConcurrentSkipListMap<String, List<String>> topicsTypes = new ConcurrentSkipListMap<String, List<String>>(node.getServiceNamesAndTypes());
 
 //            if (topicsTypes.containsValue(nametype)) {
-                for (Entry<String, String> entity : topicsTypes.entrySet()) {
-                    if (Ros2Services.messageConverteur(entity.getValue()).equals(nametype)) {
-                        System.out.println(String.format("%s", entity.getKey().replace("Reply", "")));
+                for (Entry<String, List<String>> entity : topicsTypes.entrySet()) {
+                    for (String type : entity.getValue()) {
+                        if (Ros2Services.messageConverteur(type).equals(nametype)) {
+                            System.out.println(String.format("%s", entity.getKey().replace("Reply", "")));
+                        }
                     }
                 }
 //            }
@@ -84,7 +87,7 @@ public abstract class Ros2Services {
         return displayMessage;
     }
 
-    private static void rostopicCmdPub(String[] args) {
+    private static void rosserviceCmdReq(String[] args) {
         Node node = RCLJava.createNode(NAME);
 
         if (args.length == 1) {
@@ -92,6 +95,9 @@ public abstract class Ros2Services {
         }
         else if (args.length == 2) {
             System.out.println("topic type must be specified");
+        }
+        else if (args.length == 3) {
+                System.out.println("topic data request must be specified");
         } else {
             String topic = args[1];
             String serviceTypeName = args[2];
@@ -151,21 +157,19 @@ public abstract class Ros2Services {
         return serviceType;
     }
 
-    private static void rostopicCmdInfo(String[] args) {
+    private static void rosserviceCmdInfo(String[] args) {
         // TODO Auto-generated method stub
 
     }
 
-    private static void rostopicCmdList(String[] args) {
+    private static void rosserviceCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
-        ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
         RCLJava.spinOnce(node);
+        ConcurrentSkipListMap<String, List<String>> topicsTypes = new ConcurrentSkipListMap<String, List<String>>(node.getServiceNamesAndTypes());
 
         if (topicsTypes.size() > 0) {
-            for (Entry<String, String> entity : topicsTypes.entrySet()) {
-                if (entity.getKey().endsWith("Reply")) {
-                    System.out.println(String.format("%s", entity.getKey().replace("Reply", "")));
-                }
+            for (Entry<String, List<String>> entity : topicsTypes.entrySet()) {
+              System.out.println(String.format("%s", entity.getKey()));
             }
         }else {
             System.out.println("Empty Service !");
@@ -174,7 +178,7 @@ public abstract class Ros2Services {
         node.dispose();
     }
 
-    private static void rostopicCmdType(String[] args) {
+    private static void rosserviceCmdType(String[] args) {
         Node node = RCLJava.createNode(NAME);
 
         if (args.length < 2) {
@@ -185,14 +189,15 @@ public abstract class Ros2Services {
         } else {
 
             String topicPath = args[1];
-            ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
+            ConcurrentSkipListMap<String, List<String>> topicsTypes = new ConcurrentSkipListMap<String, List<String>>(node.getServiceNamesAndTypes());
 
             if (topicsTypes.size() > 0) {
-                topicPath += "Reply";
                 if (topicsTypes.containsKey(topicPath)) {
-                        String type = topicsTypes.get(topicPath);
-                        System.out.println(String.format("%s", Ros2Services.messageConverteur(type)));
+                    List<String> types = topicsTypes.get(topicPath);
+                    for (String type : types) {
+                    System.out.println(String.format("%s", Ros2Services.messageConverteur(type)));
+                    }
                 } else {
                     System.out.println("No Service " + topicPath + " available !");
                 }
@@ -218,19 +223,19 @@ public abstract class Ros2Services {
       try {
           switch (args[0]) {
           case CMD_TYPE:
-              Ros2Services.rostopicCmdType(args);
+              Ros2Services.rosserviceCmdType(args);
               break;
           case CMD_LIST:
-              Ros2Services.rostopicCmdList(args);
+              Ros2Services.rosserviceCmdList(args);
               break;
           case CMD_INFO:
-              Ros2Services.rostopicCmdInfo(args);
+              Ros2Services.rosserviceCmdInfo(args);
               break;
           case CMD_REQ:
-              Ros2Services.rostopicCmdPub(args);
+              Ros2Services.rosserviceCmdReq(args);
               break;
           case CMD_FIND:
-              Ros2Services.rostopicCmdFind(args);
+              Ros2Services.rosserviceCmdFind(args);
               break;
           default:
               Ros2Services.fullUsage();

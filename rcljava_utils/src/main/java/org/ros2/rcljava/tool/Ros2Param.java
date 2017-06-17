@@ -27,11 +27,11 @@ public abstract class Ros2Param {
 
     private static String NAME = "_" + Ros2Param.class.getSimpleName().toLowerCase();
 
-    private static final String HELP =
-            "USAGE:\n"+
-            "  ros2param_java get <node/variable>\n"+
-            "  ros2param_java set <node/variable> <value>\n" +
-            "  ros2param_java list <node>";
+//    private static final String HELP =
+//            "USAGE:\n"+
+//            "  ros2param_java get <node/variable>\n"+
+//            "  ros2param_java set <node/variable> <value>\n" +
+//            "  ros2param_java list <node>";
 
     enum Usage {
         PARAM_NONE,
@@ -44,7 +44,7 @@ public abstract class Ros2Param {
         // Initialize RCL
         RCLJava.rclJavaInit();
 
-        Usage op = Usage.PARAM_NONE;
+//        Usage op = Usage.PARAM_NONE;
         Node node = RCLJava.createNode(NAME);
 
         String remotenode = args[0];

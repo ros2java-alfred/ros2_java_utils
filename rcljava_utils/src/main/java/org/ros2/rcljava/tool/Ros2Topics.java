@@ -14,6 +14,7 @@
  */
 package org.ros2.rcljava.tool;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -75,7 +76,7 @@ public abstract class Ros2Topics {
         } else {
 
             String topicPath = args[1];
-            ConcurrentSkipListMap<String, String > topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
+            ConcurrentSkipListMap<String, List<String>> topicsTypes = new ConcurrentSkipListMap<String, List<String>>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
 
             topicsTypes.putAll(node.getTopicNamesAndTypes());
@@ -96,13 +97,13 @@ public abstract class Ros2Topics {
 
     private static void rostopicCmdList(String[] args) {
         Node node = RCLJava.createNode(NAME);
-        ConcurrentSkipListMap<String, String> topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
+        ConcurrentSkipListMap<String, List<String>> topicsTypes = new ConcurrentSkipListMap<String, List<String>>(node.getTopicNamesAndTypes());
         RCLJava.spinOnce(node);
 
         topicsTypes.putAll(node.getTopicNamesAndTypes());
 
         if (topicsTypes.size() > 0) {
-            for (Entry<String, String> entity : topicsTypes.entrySet()) {
+            for (Entry<String, List<String>> entity : topicsTypes.entrySet()) {
                 if (!entity.getKey().endsWith("Reply") && !entity.getKey().endsWith("Request")) {
                     System.out.println(String.format("%s", entity.getKey()));
                 }
@@ -200,12 +201,12 @@ public abstract class Ros2Topics {
             System.out.println("topic type must be specified");
         } else {
             String nametype = args[1];
-            ConcurrentSkipListMap<String, String > topicsTypes = new ConcurrentSkipListMap<String, String>(node.getTopicNamesAndTypes());
             RCLJava.spinOnce(node);
+            ConcurrentSkipListMap<String, List<String> > topicsTypes = new ConcurrentSkipListMap<String, List<String>>(node.getTopicNamesAndTypes());
 
-            if (topicsTypes.containsValue(nametype)) {
-                for (Entry<String, String> entity : topicsTypes.entrySet()) {
-                    if (entity.getValue().equals(nametype)) {
+            for (Entry<String, List<String>> entity : topicsTypes.entrySet()) {
+                for (String type : entity.getValue()) {
+                    if (type.equals(nametype)) {
                         System.out.println(String.format("%s", entity.getKey()));
                     }
                 }
@@ -308,7 +309,7 @@ public abstract class Ros2Topics {
         } else {
 
             // Initialize RCL
-            RCLJava.rclJavaInit();
+            RCLJava.rclJavaInit(args);
 
             try {
                 switch (args[0]) {
