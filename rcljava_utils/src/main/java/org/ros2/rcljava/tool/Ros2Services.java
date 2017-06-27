@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 
 import org.ros2.rcljava.RCLJava;
 import org.ros2.rcljava.internal.message.Message;
-import org.ros2.rcljava.internal.service.Service;
+import org.ros2.rcljava.internal.service.MessageService;
 import org.ros2.rcljava.node.Node;
 import org.ros2.rcljava.node.service.Client;
 
@@ -103,15 +103,15 @@ public abstract class Ros2Services {
             String serviceTypeName = args[2];
             String serviceJson = args[3];
 
-            final Class<Service> messageType = Ros2Services.loadServiceMessage(serviceTypeName);
+            final Class<MessageService> messageType = Ros2Services.loadServiceMessage(serviceTypeName);
             final Gson gson = new Gson();
             System.out.println(messageType);
 
             try {
-                Client<Service> client = node.<Service>createClient(messageType, topic);
+                Client<MessageService> client = node.<MessageService>createClient(messageType, topic);
 
                 // Set request.
-                Service msg = messageType.newInstance();
+                MessageService msg = messageType.newInstance();
                 Message request = gson.fromJson(serviceJson, msg.getRequestType());
 
                 // Call service...
@@ -130,11 +130,11 @@ public abstract class Ros2Services {
     }
 
     @SuppressWarnings("unchecked")
-    public static Class<Service> loadServiceMessage(String serviceTypeName) {
-        Class<Service> serviceType = null;
+    public static Class<MessageService> loadServiceMessage(String serviceTypeName) {
+        Class<MessageService> serviceType = null;
 
         try {
-            serviceType = (Class<Service>) Class.forName(serviceTypeName.replaceFirst("/", ".srv."));
+            serviceType = (Class<MessageService>) Class.forName(serviceTypeName.replaceFirst("/", ".srv."));
         } catch (ClassNotFoundException e1) {
             System.out.println("Service not found !");
             e1.printStackTrace();
