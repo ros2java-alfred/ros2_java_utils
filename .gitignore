@@ -8,3 +8,4 @@ log4j.properties
 .project
 .settings/
 
+.ament_dependencies.properties
