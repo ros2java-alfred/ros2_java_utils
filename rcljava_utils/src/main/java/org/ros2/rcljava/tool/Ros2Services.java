@@ -215,6 +215,7 @@ public abstract class Ros2Services {
 
       if (args.length == 0) {
           fullUsage();
+          return;
       }
 
       // Initialize RCL
