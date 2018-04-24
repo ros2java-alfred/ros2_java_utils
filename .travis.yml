@@ -27,7 +27,7 @@ before_install:
 - cd $HOME_BUILD && env | grep -E '^TRAVIS_' > .env && env | grep -E '^COVERALLS_' >> .env && env | grep -E '^CI_' >> .env && echo -e "CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER\nCI_PULL_REQUEST=$TRAVIS_PULL_REQUEST\nCI_BRANCH=$TRAVIS_BRANCH\nCI_BUILD_URL=$" >> .env
 - echo "BUILD ROS2 WS..."
 - cd $HOME_BUILD
-- docker run -u 0 -it --rm -v $HOME_BUILD/ros2java-alfred/ros2_java_utils:$ROS2WS/src/ros2_java/ros2_java_utils --env-file .env -w `pwd` $DOCKER_REPO:$DOCKER_DIST sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && ament build --symlink-install --isolated --skip-packages $PKG_EXCLUDE --ament-gradle-args --parallel --daemon --configure-on-demand"
+- docker run -u 0 -it --rm -v $HOME_BUILD/ros2java-alfred/ros2_java_utils:$ROS2WS/src/ros2_java/ros2_java_utils --env-file .env -w `pwd` $DOCKER_REPO:$DOCKER_DIST sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && rm -rf install_isolated/rcljava_utils build_isolated/rcljava_utils && ament build --symlink-install --isolated --skip-packages $PKG_EXCLUDE --ament-gradle-args --parallel --daemon --configure-on-demand"
 
 script:
 - cd $HOME_BUILD && docker run -u 0 -it --rm -v $HOME_BUILD/ros2java-alfred/ros2_java_utils:$ROS2WS/src/ros2_java/ros2_java_utils --env-file .env -w `pwd` $DOCKER_REPO:$DOCKER_DIST sh -c ". ament_ws/install_isolated/local_setup.sh && cd /home/travis/build/ros2_java_ws && . ./install_isolated/local_setup.sh && ament test --symlink-install --isolated --only-packages rcljava_utils --ament-gradle-args --parallel --daemon --configure-on-demand"
