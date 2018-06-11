@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 
 <package format="3">
   <name>rcljava_utils</name>
-  <version>0.0.2</version>
+  <version>0.4.0</version>
   <description>This package is ROS2 utility.</description>
 
   <maintainer email="mick.gaillard@gmail.com">Mickael Gaillard</maintainer>
